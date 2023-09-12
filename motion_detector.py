@@ -34,7 +34,7 @@ class MotionDetector:
         # Compute the absolute difference between the current and previous frame
         frame_delta = cv2.absdiff(self.previous_frame, gray)
         
-        # Threshold the difference image to binarize
+        # Threshold the difference image to binary
         thresh = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dilation helps to fill in holes due to thresholding and consolidate detected changes
         thresh = cv2.dilate(thresh, None, iterations=2)

@@ -229,8 +229,8 @@ def send_text_via_email(detections):
     msg = MIMEText('Motion has been detected:' + str(detections))
     
     # Email configuration
-    from_email = "localeyes17@gmail.com"  # Replace with your email
-    to_email = "4139773160@txt.att.net"  # Replace with the target phone's email-to-text address
+    from_email = "example@gmail.com"  # Replace with your email
+    to_email = "phone-number@txt.att.net"  # Replace with the target phone's email-to-text address
     msg['Subject'] = 'New Video Alert'
     msg['From'] = from_email
     msg['To'] = to_email
@@ -238,7 +238,7 @@ def send_text_via_email(detections):
     # Gmail SMTP configuration
     smtp_server = 'smtp.gmail.com'
     smtp_port = 587
-    gmail_password = "qjatdfffmllwpvxc"  # Replace with your email password
+    gmail_password = "your-app-password"  # Replace with your email password
 
     # Establish a connection and send the message
     try:

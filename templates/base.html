@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Character encoding declaration -->
+    <meta charset="UTF-8">
+    
+    <!-- Responsive meta tag to ensure proper rendering on devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Title of the web page -->
+    <title>LocalEyes Video Stream</title>
+    
+    <!-- Link to the external CSS stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- Including header partial template -->
+{% include "header.html" %}
+
+<!-- Main content section -->
+<div id="content">
+    {% block content %}
+    <!-- Placeholder where content from child templates will be inserted -->
+    {% endblock %}
+</div>
+
+<!-- Including footer partial template -->
+{% include "footer.html" %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Grabbing references to various elements for control and manipulation
+    let videoPlayer = document.getElementById('videoPlayer');
+    let liveStream = document.getElementById('liveStream');
+    let videoControls = document.getElementById('videoControls');
+    let goLiveButton = document.getElementById('goLive');
+    let deleteVideoButton = document.getElementById('deleteVideo');
+    let downloadVideoButton = document.getElementById('downloadVideo');
+
+    // When 'Go Live' button is clicked, display live stream and hide video player and controls
+    goLiveButton.addEventListener('click', function() {
+        liveStream.style.display = 'block';
+        videoPlayer.style.display = 'none';
+        videoControls.style.display = 'none';
+    });
+
+    // On clicking 'Delete' button, send request to server to delete the current video
+    deleteVideoButton.addEventListener('click', function() {
+        let currentVideoSrc = videoPlayer.querySelector('source').getAttribute('src');
+        let videoName = currentVideoSrc.split("/").pop().split(".")[0];
+        
+        fetch(`/delete_video/${videoName}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success") {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.log("Error trying to delete the video:", error);
+        });
+    });
+
+    // Logic to download the current video
+    downloadVideoButton.addEventListener('click', function() {
+        let currentVideoSrc = videoPlayer.querySelector('source').getAttribute('src');
+        let a = document.createElement('a');
+        a.href = currentVideoSrc;
+        a.download = currentVideoSrc.split("/").pop();
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+
+    // Logic to play a video when an item from the video list is clicked
+    document.getElementById('videoList').addEventListener('click', function(e) {
+        if (e.target.classList.contains('videoItem') || e.target.parentElement.classList.contains('videoItem')) {
+            let videoItem = e.target.classList.contains('videoItem') ? e.target : e.target.parentElement;
+            let videoSource = videoItem.querySelector('.thumbnail').getAttribute('data-video-src');
+            videoPlayer.querySelector('source').setAttribute('src', videoSource);
+            videoPlayer.load();
+            videoPlayer.play().then(_ => {}).catch(error => {
+                console.log("Error trying to play the video:", error);
+            });
+            liveStream.style.display = 'none';
+            videoPlayer.style.display = 'block';
+            videoControls.style.display = 'block';
+        }
+    });
+
+    // Logic to hide the video player and display live stream when the video ends
+    videoPlayer.addEventListener('ended', function() {
+        liveStream.style.display = 'block';
+        videoPlayer.style.display = 'none';
+    });
+
+    // Similar logic for when the video is paused
+    videoPlayer.addEventListener('pause', function() {
+        liveStream.style.display = 'block';
+        videoPlayer.style.display = 'none';
+    });
+
+    // Toggle logic for the navigation menu
+    document.getElementById("menuButton").addEventListener("click", function(){
+        var menu = document.getElementById("menu");
+        if (menu.classList.contains("show")) {
+            menu.classList.remove("show");
+        } else {
+            menu.classList.add("show");
+        }
+    });
+
+    var menu = document.getElementById("menu");
+    let dropdown = document.getElementById('videoDropdown');
+
+    // Function to populate the dropdown with video data
+    function populateDropdown() {
+        fetch('/video_list')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            let categoryOrder = ['Today', 'Past 7 days', 'Older'];
+            categoryOrder.forEach(category => {
+                if (data[category]) {
+                    let categoryItem = document.createElement('li');
+                    categoryItem.classList.add('category-header');
+                    categoryItem.textContent = category;
+                    dropdown.appendChild(categoryItem);
+                    data[category].reverse().forEach(video => {
+                        let time = video.timestamp.split(" ")[1].slice(0, 5);
+                        let detections = video.detections ? video.detections.join(", ") : "unknown";
+                        let listItem = document.createElement('li');
+                        listItem.innerHTML = `<a href="#" data-video-src="${video.filename}">${time} ${detections}</a>`;
+                        dropdown.appendChild(listItem);
+                    });
+                }
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching from /video_list:", error);
+        });
+    }
+
+    // Logic to display/hide the video dropdown on clicking 'History'
+    document.getElementById('historyMenuItem').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (dropdown.children.length === 0) {
+            populateDropdown();
+        }
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    });
+
+    // Logic to play a video when an item from the dropdown is clicked
+    document.getElementById('videoDropdown').addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            let videoSource = '/static/data/' + e.target.getAttribute('data-video-src');
+            videoPlayer.querySelector('source').setAttribute('src', videoSource);
+            videoPlayer.load();
+            videoPlayer.play();
+            document.getElementById('liveStream').style.display = 'none';
+            videoPlayer.style.display = 'block';
+            document.getElementById('videoControls').style.display = 'block';
+            menu.classList.remove("show");
+        }
+    });
+    
+});
+</script>
+
+</body>
+</html>

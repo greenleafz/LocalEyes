@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="videoWrapper">
+    <img id="liveStream" src="/video_feed" alt="Video Feed">
+
+    <!-- The video player element -->
+    <video id="videoPlayer" controls style="display: none;">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div id="videoControls" style="display: none;">
+        <button id="goLive">Go Live</button>
+        <button id="deleteVideo">Delete</button>
+        <button id="downloadVideo">Download</button>
+    </div>
+    
+    <h2 id="historyLabel">Detection History</h2>
+
+    <div id="videoList">
+        {% for video in videos %}
+        <div class="videoItem">
+            <img src="{{ url_for('static', filename='data/' + video_data[video]['thumbnail']) }}" 
+                 alt="Thumbnail" 
+                 class="thumbnail" 
+                 data-video-src="{{ url_for('static', filename='data/' + video) }}">
+            
+            <!-- Display the detection label and timestamp -->
+            <div class="videoInfo">
+                <span class="detectionLabel">Motion Detected - {{ ', '.join(video_data[video]['detections']) }}</span>
+                <span class="timestamp">{{ video_data[video]['timestamp'] }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>    
+</div>
+{% endblock %}
+

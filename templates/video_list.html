@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="videoListContainer">
+    <h2>Recent Videos</h2>
+    <ul>
+        {% for video, metadata in videos.items() %}
+        <li>
+            <img src="{{ url_for('static', filename='data/thumbnail_' + video + '.jpg') }}"
+                 alt="Thumbnail for {{ video }}" 
+                 data-video-src="{{ url_for('static', filename='data/' + video + '.mp4') }}">
+            <span>{{ metadata['timestamp'] }} - Motion Detected: {{ ', '.join(metadata['detections']) }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

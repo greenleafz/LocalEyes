@@ -1,0 +1,292 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #c0e4fd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+nav {
+    background-color: #0099CC;
+    /* padding: 10px 20px; */
+    height: 6vh;
+    min-height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    z-index: 10;
+}
+
+nav h1 {
+    font-size: 3vh;
+    flex-grow: 1;
+    text-align: center; /* This will ensure the text inside h1 is centered */
+    margin: 0; /* To remove any default margin */
+}
+
+#menuButton {
+    font-size: 3vh; /* adjust as needed */
+    cursor: pointer;  /* Makes it clear to the user that it's clickable */
+    padding: 0 10px;  /* Optional padding for easier clicking/tapping */
+}
+
+/* Style for the slide-out menu */
+#menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Assuming the width of the menu to be 300px, adjust as needed */
+    width: 300px;
+    height: 100%;
+    background-color: #e3f7de; /* Assuming white background for the menu */
+    overflow-y: auto; /* To scroll if the menu content is longer than viewport */
+    transition: left 0.3s ease-in-out; /* Slide effect */
+    z-index: 5; /* This will ensure the menu is below the nav */
+    padding-top: 7vh; /* To account for the height of the nav */
+}
+
+#menu ul li {
+    list-style-type: none; /* Removes the bullet points */
+    font-size: 24px; /* Adjust to your preference */
+    margin-bottom: 10px; /* Gives a little spacing between items */
+}
+
+#menu ul li a {
+    display: block; /* Make the entire list item area clickable */
+    padding: 15px 20px; /* Add padding to increase touchable area */
+    font-size: 1.5rem; /* Increase font size */
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Set a default color */
+    transition: background-color 0.3s ease; /* Smooth transition for background color changes */
+}
+
+#menu ul li a:hover,
+#menu ul li a:focus,
+#menu ul li a:active {
+    background-color: #C7F0BD; /* Change background on hover, focus, or active */
+    color: #555; /* Darken text color for contrast */
+}
+
+#menu ul li:not(:last-child) {
+    margin-bottom: 10px; /* Space out the links a bit */
+}
+
+/* When the menu is shown */
+#menu.show {
+    left: 0;
+}
+
+#menu #videoDropdown li:not(.category-header) a {
+    font-size: 0.8em;
+}
+
+
+nav input[type="text"] {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+}
+
+#videoWrapper {
+    position: absolute;
+    top: 10vh; /* This will push the videoWrapper 10% down from the top */
+    left: 50%;
+    transform: translate(-50%, 0); /* Modified to not translate vertically */
+    width: auto;  
+    height: auto; 
+    max-height: calc(80vh - 20px); /* Reduce the 10vh from the top and the padding from the total 100vh */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+    padding: 20px 0; 
+}
+#videoPlayer {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* center the video if it doesn't take up full width */
+    max-height: 60%; /* limit the video's height to a portion of the wrapper's height */
+}
+#videoWrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* center the video if it doesn't take up full width */
+    max-height: 60%; /* limit the video's height to a portion of the wrapper's height */
+}
+
+#videoListContainer {
+    width: auto; /* Full width of videoWrapper */
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Center video list items horizontally */
+    margin-top: 20px;     /* Add some space between the video and the list */
+}
+
+#videoListContainer ul li {
+    /* Defining a minimum width for the list item */
+    min-width: 40%;
+    cursor: pointer;
+}
+
+#videoDropdown ul li a {
+    font-size: 0.5em;
+}
+
+
+#videoList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.videoItem {
+    display: flex;
+    flex-direction: row;  /* This ensures thumbnail and text are side by side */
+    width: 60%;
+    height: 6vh;
+    align-items: center; /* Align children to the center vertically */
+    justify-content: start; /* Spread out children to far edges */
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.videoInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.detectionLabel {
+    color: #ff5b5b; /* Red color for emphasis. Adjust as desired. */
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 3px;
+}
+
+.timestamp {
+    color: #444; /* Subdued color for the timestamp */
+    font-size: 1em;
+}
+
+.videoItem:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow on hover */
+}
+
+.videoItem:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Flatter shadow when active (pressed) */
+    transform: scale(0.98); /* Slightly scale down the bar to give a pressed effect */
+}
+
+#historyLabel {
+    text-align: center;
+    font-family: 'Arial Black', sans-serif; /* This is a blockier sans-serif font */
+    margin: 20px 0; /* This gives some space above and below the label */
+}
+
+#videoWrapper .thumbnail {
+    width: auto;
+    height: 90%;
+    margin-right: 5px;
+    object-fit: cover;
+}
+
+.videoName {
+    flex-grow: 1; /* Allow it to take up all available space between thumbnail and end of container */
+    text-align: center; /* Center the text */
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2vh;
+}
+
+footer {
+    background-color: #0099CC;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* Base styling for both buttons */
+.button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-block;
+    margin: 5px;
+    font-size: 1em;
+    border: none;
+    outline: none;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Go Live Button Styling */
+#goLive {
+    background-color: #0099CC;  /* Similar to your nav color */
+}
+
+#goLive:hover {
+    background-color: #007aa9;  /* A slightly darker shade for hover effect */
+}
+
+/* Delete Button Styling */
+#deleteVideo {
+    background-color: #ff5b5b; /* Similar to your detectionLabel color */
+}
+
+#deleteVideo:hover {
+    background-color: #e34a4a; /* A slightly darker shade for hover effect */
+}
+
+/* Controls container styling */
+#videoControls {
+    display: none;
+    margin-top: 10px; /* Spacing between video player and buttons */
+    text-align: center; /* Center buttons */
+}
+
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .videoItem {
+        height: 10vh; /* increase the height of the touch bar for easier tapping */
+        width: 100%;
+        padding: 15px; /* add some padding for aesthetics */
+    }
+
+    .videoName, .detectionLabel, .timestamp {
+        font-size: 2.5vw; /* adjust font size based on viewport width; you can modify this value as needed */
+    }
+}

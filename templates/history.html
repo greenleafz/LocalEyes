@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="fullHistoryContainer">
+    <h2>All Videos</h2>
+    <ul>
+        {% for video in all_videos %}
+        <li>
+            <!-- Display the thumbnail for each video -->
+            <img src="{{ url_for('static', filename='data/' + video + '.jpg') }}" alt="Thumbnail for {{ video }}" data-video-src="{{ url_for('static', filename='data/' + video + '.mp4') }}">
+            <span>{{ video }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
